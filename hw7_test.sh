@@ -1,0 +1,1 @@
+python hw7_best.py $1 $2 
