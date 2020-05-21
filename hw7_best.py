@@ -6,7 +6,7 @@ import cv2
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-from torchsummary import summary
+#from torchsummary import summary
 import pandas as pd
 from torch.utils.data import DataLoader, Dataset
 import time
