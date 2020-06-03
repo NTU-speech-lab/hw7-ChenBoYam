@@ -281,11 +281,19 @@ class StudentNet(nn.Module):
 
 
 
+<<<<<<< HEAD
 #teacher_net = models.resnet18(pretrained=False, num_classes=11).cuda()
 #student_net = StudentNet(base=16).cuda()
 #summary(student_net, (3, 128, 128))
 #teacher_net.load_state_dict(torch.load(f'./teacher_resnet18.bin'))
 #optimizer = optim.AdamW(student_net.parameters(), lr=1e-3)
+=======
+teacher_net = models.resnet18(pretrained=False, num_classes=11).cuda()
+student_net = StudentNet(base=16).cuda()
+#summary(student_net, (3, 128, 128))
+teacher_net.load_state_dict(torch.load(f'./teacher_resnet18.bin'))
+optimizer = optim.AdamW(student_net.parameters(), lr=1e-3)
+>>>>>>> 24cee21a789d98751470ddf650223814668f8110
 
 
 """# Start Training
@@ -383,8 +391,13 @@ def decode8(fname):
 
     return custom_dict
 
+<<<<<<< HEAD
 #encode8(params, '8_bit_model.pkl')
 #print(f"8-bit cost: {os.stat('8_bit_model.pkl').st_size} bytes.")
+=======
+encode8(params, 'model.pkl')
+print(f"8-bit cost: {os.stat('model.pkl').st_size} bytes.")
+>>>>>>> 24cee21a789d98751470ddf650223814668f8110
 
 student_net = StudentNet(base=16).cuda()
 student_net.load_state_dict(decode8('model.pkl'))
