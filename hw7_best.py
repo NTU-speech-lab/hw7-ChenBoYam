@@ -107,7 +107,7 @@ class Classifier(nn.Module):
             width_mult: 為了之後的Network Pruning使用，在base*8 chs的Layer上會 * width_mult代表剪枝後的ch數量。        
         '''
         super(Classifier, self).__init__()
-        multiplier = [1, 2, 4, 8, 16, 16, 16, 16]
+        multiplier = [1, 2, 8, 8, 16, 16, 16, 16]
 
         # bandwidth: 每一層Layer所使用的ch數量
         bandwidth = [ base * m for m in multiplier]
@@ -218,7 +218,7 @@ def decode8(fname):
 
     return custom_dict
 student_net = Classifier(base=16).cuda()
-student_net.load_state_dict(decode8('8_bit_model.pkl'))
+student_net.load_state_dict(decode8('model.pkl'))
 
 test_set = ImgDataset(test_x, transform=test_transform)
 test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)

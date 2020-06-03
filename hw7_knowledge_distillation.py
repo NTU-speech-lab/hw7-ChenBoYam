@@ -41,7 +41,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import torchvision.models as models
-from torchsummary import summary
+#from torchsummary import summary
 # Load進我們的Model架構(在hw7_Architecture_Design.ipynb內)
 #!gdown --id '1lJS0ApIyi7eZ2b3GMyGxjPShI8jXM2UC' --output "hw7_Architecture_Design.ipynb"
 # %run "hw7_Architecture_Design.ipynb"
@@ -185,7 +185,7 @@ class StudentNet(nn.Module):
             width_mult: 為了之後的Network Pruning使用，在base*8 chs的Layer上會 * width_mult代表剪枝後的ch數量。        
         '''
         super(StudentNet, self).__init__()
-        multiplier = [1, 2, 4, 8, 16, 16, 16, 16]
+        multiplier = [1, 2, 8, 8, 16, 16, 16, 16]
 
         # bandwidth: 每一層Layer所使用的ch數量
         bandwidth = [ base * m for m in multiplier]
@@ -281,11 +281,11 @@ class StudentNet(nn.Module):
 
 
 
-teacher_net = models.resnet18(pretrained=False, num_classes=11).cuda()
-student_net = StudentNet(base=16).cuda()
-summary(student_net, (3, 128, 128))
-teacher_net.load_state_dict(torch.load(f'./teacher_resnet18.bin'))
-optimizer = optim.AdamW(student_net.parameters(), lr=1e-3)
+#teacher_net = models.resnet18(pretrained=False, num_classes=11).cuda()
+#student_net = StudentNet(base=16).cuda()
+#summary(student_net, (3, 128, 128))
+#teacher_net.load_state_dict(torch.load(f'./teacher_resnet18.bin'))
+#optimizer = optim.AdamW(student_net.parameters(), lr=1e-3)
 
 
 """# Start Training
@@ -335,22 +335,22 @@ def run_epoch(dataloader, update=True, alpha=0.5):
 # TeacherNet永遠都是Eval mode.
 
 
-teacher_net.eval()
-now_best_acc = 0
-for epoch in range(250):
-    student_net.train()
-    train_loss, train_acc = run_epoch(train_dataloader, update=True)
-    student_net.eval()
-    valid_loss, valid_acc = run_epoch(valid_dataloader, update=False)
+#teacher_net.eval()
+#now_best_acc = 0
+#for epoch in range(250):
+#     student_net.train()
+#     train_loss, train_acc = run_epoch(train_dataloader, update=True)
+#     student_net.eval()
+#     valid_loss, valid_acc = run_epoch(valid_dataloader, update=False)
 
-    # 存下最好的model。
-    if valid_acc > now_best_acc:
-        now_best_acc = valid_acc
-        torch.save(student_net.state_dict(), 'student_model.bin')
-    print('epoch {:>3d}: train loss: {:6.4f}, acc {:6.4f} valid loss: {:6.4f}, acc {:6.4f}'.format(
-        epoch, train_loss, train_acc, valid_loss, valid_acc))
+#     # 存下最好的model。
+#     if valid_acc > now_best_acc:
+#         now_best_acc = valid_acc
+#         torch.save(student_net.state_dict(), 'student_model.bin')
+#     print('epoch {:>3d}: train loss: {:6.4f}, acc {:6.4f} valid loss: {:6.4f}, acc {:6.4f}'.format(
+#         epoch, train_loss, train_acc, valid_loss, valid_acc))
 
-params = torch.load('student_model.bin')
+# params = torch.load('student_model.bin')
 
 import pickle
 def encode8(params, fname):
@@ -383,11 +383,11 @@ def decode8(fname):
 
     return custom_dict
 
-encode8(params, '8_bit_model.pkl')
-print(f"8-bit cost: {os.stat('8_bit_model.pkl').st_size} bytes.")
+#encode8(params, '8_bit_model.pkl')
+#print(f"8-bit cost: {os.stat('8_bit_model.pkl').st_size} bytes.")
 
 student_net = StudentNet(base=16).cuda()
-student_net.load_state_dict(decode8('8_bit_model.pkl'))
+student_net.load_state_dict(decode8('model.pkl'))
 student_net.eval()
 prediction = []
 
