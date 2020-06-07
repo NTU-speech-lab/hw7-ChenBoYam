@@ -41,10 +41,14 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import torchvision.models as models
+import sys
 #from torchsummary import summary
 # Load進我們的Model架構(在hw7_Architecture_Design.ipynb內)
 #!gdown --id '1lJS0ApIyi7eZ2b3GMyGxjPShI8jXM2UC' --output "hw7_Architecture_Design.ipynb"
 # %run "hw7_Architecture_Design.ipynb"
+
+workspace_dir = sys.argv[1]
+output_dir = sys.argv[2]
 
 """Knowledge Distillation
 ===
@@ -144,7 +148,7 @@ def get_dataloader(mode='training', batch_size=32):
     assert mode in ['training', 'testing', 'validation']
 
     dataset = MyDataset(
-        f'./food-11/{mode}',
+        workspace_dir+'/'+mode,
         transform=trainTransform if mode == 'training' else testTransform)
 
     dataloader = torch.utils.data.DataLoader(
@@ -409,7 +413,7 @@ for now_step, batch_data in enumerate(test_dataloader):
      
 
 #將結果寫入 csv 檔
-with open('output.csv', 'w') as f:
+with open(output_dir, 'w') as f:
     f.write('Id,label\n')
     for i, y in  enumerate(prediction):
         f.write('{},{}\n'.format(i, y))
