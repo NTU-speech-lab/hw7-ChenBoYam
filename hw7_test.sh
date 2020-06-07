@@ -1,1 +1,1 @@
-python hw7_best.py $1 $2 
+python hw7_knowledge_distillation.py $1 $2 
